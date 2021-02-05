@@ -94,7 +94,6 @@ app.post('/update',function(req,res){
 })
 
 app.post('/update2',function(req,res){
-    console.log("no");
     const newData = {
         Ledstatus : 0
         };
@@ -102,7 +101,6 @@ app.post('/update2',function(req,res){
 })
 
 led.on("value",e=>{
-    console.log(e.val().table);
     table=e.val().table;
     io.emit('message',table);
 });
