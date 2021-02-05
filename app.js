@@ -9,7 +9,7 @@ app.use(express.static('node-modules'));
 app.set('view engine','ejs');
 const http = require('http');
 const socketio = require('socket.io'); 
-
+const port = process.env.PORT||3000;
 const server = http.createServer(app);
 const io = socketio(server);
 
@@ -107,6 +107,6 @@ led.on("value",e=>{
     io.emit('message',table);
 });
 
-server.listen(3000, () => {
+server.listen(port, () => {
     console.log('listening on *:3000');
   });
