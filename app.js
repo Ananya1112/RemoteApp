@@ -20,7 +20,7 @@ app.engine("html", require("ejs").renderFile);
 app.use(cookieParser());
 app.use(csrfMiddleware);
 
-var serviceAccount = require("D:/E/sumit/project/Robotics Project/Node Mcu/firebase.json");
+var serviceAccount = require(__dirname+"/firebase.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
