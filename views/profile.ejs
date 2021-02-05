@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote</title>
+    
+    
+  <link rel="icon" href="favicon.ico">
+
+  <!-- Bootstrap style sheet-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+  integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+<!-- CSS stylesheet -->
+<link rel="stylesheet" href="styles.css">
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!-- Font Awesome -->
+<script src="https://kit.fontawesome.com/b2fd0da17e.js" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+</head>
+<body>
+  <div class="main-panel">
+    <nav class="navbar navbar-expand-md sticky-top navbar-dark color">
+      <a class="navbar-brand title" href="/">&nbsp; Remote</a>
+      <div class="collapse navbar-collapse sub-title" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/sessionLogout">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+<section class="LedControl">
+  <div class="row">
+    <div class="option1 col-lg-6">
+      <h2>LED Control</h2>
+      <div class="row">
+        <div class="text-center col-lg-4">
+            <button id="toggle" type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" value="1">
+            LED-On
+            </button>
+        </div>
+        <div class="col-lg-4">
+          <img id="img1" src="on.png" class="led">
+        </div> 
+      </div>  
+    </div>
+
+    <div class="option2 text-center col-lg-6">
+      <h2>LED Brightness</h2>
+      <img id="img2" src="on.png" class="led">
+    </div>
+</div>
+</section>
+
+<section class="graphcontrol">
+  <div class="row">
+    <div class="option3 col-lg-6">
+      <div id="chartContainer" style="height: 370px; width: 100%;"></div>  
+      <br>
+      <h3>Air Pollution Level: <h3 id="pm10c"></h3></h3>
+    </div>
+
+    <div class="option4 col-lg-6">
+      <div id="chartContainer2" style="height: 370px; width: 100%;"></div>
+      <br>
+      <h3>Air Pollution Level: <h3 id="pm25c"></h3></h3>
+    </div>
+</div>
+</section>
+
+
+<script src="/socket.io/socket.io.js"></script>
+
+</body>
+<script src="function.js"></script>
+</html>
