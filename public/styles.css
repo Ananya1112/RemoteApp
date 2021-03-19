@@ -10,6 +10,11 @@
     margin-top: 20px;
     padding: 5px;
 }
+#time{
+  color: white;
+  font-size: 2.5rem;
+  padding-left: 15rem;
+}
 
 td{
     padding: 10px;

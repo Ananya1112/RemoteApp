@@ -4,18 +4,37 @@ const img1 = document.getElementById('img1');
 const img2 = document.getElementById('img2');
 const pm25c = document.getElementById('pm25c');
 const pm10c = document.getElementById('pm10c');
+const time = document.getElementById('time');
+const speak = document.getElementById('speak');
+
+speak.addEventListener('click',e=>{
+    speak.innerHTML="Listening";
+    axios({
+        method: 'post',
+        url: '/TTS',
+        //timeout: 5000
+    })
+    .then((respose)=>{
+        speak.innerHTML="Speak"; 
+        console.log(respose);
+    })
+    .catch(err=>{
+        speak.innerHTML="Speak";
+        console.log(err);
+    });
+    e.preventDefault();
+});
 
 
 toggle.addEventListener('click',e => {
 
     e.preventDefault();
-    console.log(toggle.value);
     if(toggle.value == '1'){
     axios({
         method: 'post',
         url: '/update',
         data: {
-            ledStatus : 1
+            ledStatus : 0
         }
     });
     toggle.value = "0";
@@ -27,7 +46,7 @@ else{
         method: 'post',
         url: '/update2',
         data: {
-            ledStatus : 0
+            ledStatus : 1
         }
     });
     toggle.value = "1";
@@ -61,10 +80,9 @@ window.onload = function() {
             dataPoints: dataPoints2
         }]
     });
-    // Initial Values
     
-    
-    function addData(data) {
+    stime();
+    function addData(data,status) {
                 dataPoints.push({x: xValue/3, y: data.pm10});
                 dataPoints2.push({x: xValue/3, y: data.pm25});
                 xValue++;
@@ -101,21 +119,44 @@ window.onload = function() {
             pm10c.innerHTML = "Very Unhealthy";
         else
             pm10c.innerHTML = "Hazardous";
+
+        if(status == '1'){
+            toggle.value = "1";
+            toggle.innerHTML = "LED-On";
+            img1.src = "on.png";
+        }
+        else{
+            toggle.value = "0";
+            toggle.innerHTML = "LED-OFF";
+            img1.src = "off.png";
+        }
             
 
 
 
     }
     socket.on('message', function(msg){
-        if(xValue%3 ==0)
+        if(xValue%3 == 0)
         {
-        img2.style.opacity = msg.ledb;    
-        addData(msg);
+        img2.style.opacity = msg.table.ledb;    
+        addData(msg.table,msg.Ledstatus);
         }
         else{
             xValue++;
         }
     });
-        
 
+    function stime(){
+        var today = new Date();
+        var hh = today.getHours();
+        var mm = checktime(today.getMinutes());
+        var ss = checktime(today.getSeconds());
+        
+        time.innerHTML = hh+":"+mm+":"+ss;
+        var t = setTimeout(stime, 500);
+    }
+    function checktime(i){
+        if(i<10) return '0'+i;
+        else return i;
+    }
 }

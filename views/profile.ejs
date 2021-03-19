@@ -25,11 +25,19 @@
 <body>
   <div class="main-panel">
     <nav class="navbar navbar-expand-md sticky-top navbar-dark color">
-      <a class="navbar-brand title" href="/">&nbsp; Remote</a>
+      <a class="navbar-brand title" href="/" style="font-size: 2.5rem;">&nbsp; Remote</a>
       <div class="collapse navbar-collapse sub-title" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav mx-auto">
           <li class="nav-item">
-            <a class="nav-link" href="/sessionLogout">Logout</a>
+            <p id="time"></p>
+          </li>
+        </ul>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <button id="speak" type="button" class="btn btn-primary" aria-pressed="false" >Speak</button>
+            </li>
+          <li class="nav-item">
+            <a class="nav-link" style="font-size: 2rem;" href="/sessionLogout">Logout</a>
           </li>
         </ul>
       </div>

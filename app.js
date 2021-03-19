@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
-
+const spawn = require('child_process').spawnSync;
 app.use(express.json());
 app.use(express.static('public'));
 app.use(express.static('node-modules'));
@@ -12,10 +12,20 @@ const socketio = require('socket.io');
 const port = process.env.PORT||3000;
 const server = http.createServer(app);
 const io = socketio(server);
+const nodemailer = require('nodemailer');
+
+
 
 var admin = require("firebase-admin");
 const csrfMiddleware = csrf({ cookie: true });
-var table=10;
+var table={
+  Ledstatus:1,
+  table :{
+    ledb:0.5,
+    pm10:150,
+    pm25:32
+  }
+};
 app.engine("html", require("ejs").renderFile);
 app.use(cookieParser());
 app.use(csrfMiddleware);
@@ -29,6 +39,22 @@ admin.initializeApp({
 
 const database = admin.database();
 const led = database.ref('/');
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'sumits4425@gmail.com',
+    pass: 'Sumit@1234'
+  }
+});
+
+var mailOptions = {
+  from: 'sumits4425@gmail.com',
+  to: 'sumit.singhss194@gmail.com',
+  subject: 'Alert in your Home',
+  text: 'The air concentrations are hazardous'
+};
+
 
 app.all("*", (req, res, next) => {
     res.cookie("XSRF-TOKEN", req.csrfToken());
@@ -88,22 +114,36 @@ app.get("/profile", function (req, res) {
 
 app.post('/update',function(req,res){
     const newData = {
-        Ledstatus : 1
+        Ledstatus : 0
         };
     database.ref("/").update(newData);
 })
 
 app.post('/update2',function(req,res){
     const newData = {
-        Ledstatus : 0
+        Ledstatus : 1
         };
     database.ref("/").update(newData);
 })
 
 led.on("value",e=>{
-    table=e.val().table;
+    table=e.val();
+    if(table.table.pm10>180||table.table.pm25>110){
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      }
+    });}
     io.emit('message',table);
 });
+
+app.post('/TTS',function(req,res){
+
+  spawn('python',['./voice.py',table.table.pm10,table.table.pm25]);
+  res.sendStatus(200);
+})
+
+
 
 server.listen(port, () => {
     console.log('listening on *:3000');
