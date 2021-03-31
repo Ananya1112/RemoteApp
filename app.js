@@ -15,7 +15,6 @@ const io = socketio(server);
 const nodemailer = require('nodemailer');
 
 
-
 var admin = require("firebase-admin");
 const csrfMiddleware = csrf({ cookie: true });
 var table={
@@ -117,6 +116,7 @@ app.post('/update',function(req,res){
         Ledstatus : 0
         };
     database.ref("/").update(newData);
+    res.sendStatus(200);
 })
 
 app.post('/update2',function(req,res){
@@ -124,6 +124,7 @@ app.post('/update2',function(req,res){
         Ledstatus : 1
         };
     database.ref("/").update(newData);
+    res.sendStatus(200);
 })
 
 led.on("value",e=>{
@@ -138,11 +139,19 @@ led.on("value",e=>{
 });
 
 app.post('/TTS',function(req,res){
+  const python=spawn('python',['./voice.py',table.table.pm10,table.table.pm25]);
 
-  spawn('python',['./voice.py',table.table.pm10,table.table.pm25]);
+  var data=python.stdout.toString();
+  console.log(data);
+  if(data.includes("0",0)){
+    io.emit('status',"1");
+  }
+  if(data.includes("1",0)){
+    io.emit('status',"0");
+  }
+  
   res.sendStatus(200);
 })
-
 
 
 server.listen(port, () => {

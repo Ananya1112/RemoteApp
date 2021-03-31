@@ -10,12 +10,12 @@ r = sr.Recognizer()
 
 def record_audio(ask=False):
     with sr.Microphone() as source:
-        if ask:
-            print(ask)
+        # if ask:
+        #     print(ask)
         audio = r.listen(source)
         try:
             voice_data = r.recognize_google(audio)
-            print(voice_data)
+            # print(voice_data)
         except sr.UnknownValueError:
             print('Sorry,I did not get that')
         return voice_data
@@ -27,9 +27,13 @@ def respond(voice_data):
         engine.say(text)
         engine.runAndWait()
     if 'time' in voice_data:
-        print(ctime())
-        engine.say(ctime())
+        print(ctime()[0:16])
+        engine.say(ctime()[0:16])
         engine.runAndWait()
+    if "on" in voice_data:
+        print("1")
+    if "off" in voice_data:
+        print("0")
     # if 'search' in voice_data:
     #     engine.say("What do you want to search for")
     #     engine.runAndWait()
@@ -39,7 +43,7 @@ def respond(voice_data):
     #     engine.say('Here is what i found')
     #     engine.runAndWait()
 
-print('say something')
+# print('say something')
 voice_data = record_audio()
 respond(voice_data)
 

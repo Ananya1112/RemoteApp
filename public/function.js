@@ -29,31 +29,38 @@ speak.addEventListener('click',e=>{
 toggle.addEventListener('click',e => {
 
     e.preventDefault();
-    if(toggle.value == '1'){
-    axios({
-        method: 'post',
-        url: '/update',
-        data: {
-            ledStatus : 0
-        }
-    });
-    toggle.value = "0";
-    toggle.innerHTML = "LED-OFF";
-    img1.src = "off.png";
-}
-else{
-    axios({
-        method: 'post',
-        url: '/update2',
-        data: {
-            ledStatus : 1
-        }
-    });
-    toggle.value = "1";
-    toggle.innerHTML = "LED-On";
-    img1.src = "on.png";
-}
+    change(toggle.value);
 });
+
+function change(value){
+    if(value == '1'){
+        axios({
+            method: 'post',
+            url: '/update',
+            data: {
+                ledStatus : 0
+            }
+        });
+        toggle.value = "0";
+        toggle.innerHTML = "LED-OFF";
+        img1.src = "off.png";
+    }
+    else{
+        axios({
+            method: 'post',
+            url: '/update2',
+            data: {
+                ledStatus : 1
+            }
+        });
+        toggle.value = "1";
+        toggle.innerHTML = "LED-On";
+        img1.src = "on.png";
+    }
+}
+
+
+
 var xValue = 0;
 window.onload = function() {
     var dataPoints = [];
@@ -120,6 +127,8 @@ window.onload = function() {
         else
             pm10c.innerHTML = "Hazardous";
 
+    }
+    function status(status){
         if(status == '1'){
             toggle.value = "1";
             toggle.innerHTML = "LED-On";
@@ -130,21 +139,23 @@ window.onload = function() {
             toggle.innerHTML = "LED-OFF";
             img1.src = "off.png";
         }
-            
-
-
-
     }
+
     socket.on('message', function(msg){
+        status(msg.Ledstatus)
         if(xValue%3 == 0)
         {
         img2.style.opacity = msg.table.ledb;    
-        addData(msg.table,msg.Ledstatus);
+        addData(msg.table);
         }
         else{
             xValue++;
         }
     });
+
+    socket.on("status",function(msg){
+        change(msg);
+    })
 
     function stime(){
         var today = new Date();
