@@ -18,7 +18,9 @@ const nodemailer = require('nodemailer');
 var admin = require("firebase-admin");
 const csrfMiddleware = csrf({ cookie: true });
 var table={
-  Ledstatus:1,
+  Led1:1,
+  Led2:1,
+  Fan:1,
   table :{
     ledb:0.5,
     pm10:150,
@@ -111,22 +113,6 @@ app.get("/profile", function (req, res) {
     res.redirect("/");
   });
 
-app.post('/update',function(req,res){
-    const newData = {
-        Ledstatus : 0
-        };
-    database.ref("/").update(newData);
-    res.sendStatus(200);
-})
-
-app.post('/update2',function(req,res){
-    const newData = {
-        Ledstatus : 1
-        };
-    database.ref("/").update(newData);
-    res.sendStatus(200);
-})
-
 led.on("value",e=>{
     table=e.val();
     if(table.table.pm10>180||table.table.pm25>110){
@@ -143,16 +129,69 @@ app.post('/TTS',function(req,res){
 
   var data=python.stdout.toString();
   console.log(data);
-  if(data.includes("0",0)){
+  
+  if(data.includes("l0",0)){
     io.emit('status',"1");
   }
-  if(data.includes("1",0)){
+  if(data.includes("l1",0)){
     io.emit('status',"0");
+  }
+  if(data.includes("f0",0)){
+    io.emit('statusf',"1");
+  }
+  if(data.includes("f1",0)){
+    io.emit('statusf',"0");
   }
   
   res.sendStatus(200);
 })
 
+app.post('/update1n',function(req,res){
+  const newData = {
+      Led1: 0
+      };
+  database.ref("/").update(newData);
+  res.sendStatus(200);
+})
+
+app.post('/update1f',function(req,res){
+  const newData = {
+      Led1: 1
+      };
+  database.ref("/").update(newData);
+  res.sendStatus(200);
+})
+app.post('/update2n',function(req,res){
+  const newData = {
+      Led2: 0
+      };
+  database.ref("/").update(newData);
+  res.sendStatus(200);
+})
+
+app.post('/update2f',function(req,res){
+  const newData = {
+      Led2: 1
+      };
+  database.ref("/").update(newData);
+  res.sendStatus(200);
+})
+
+app.post('/update3n',function(req,res){
+  const newData = {
+      Fan: 0
+      };
+  database.ref("/").update(newData);
+  res.sendStatus(200);
+})
+
+app.post('/update3f',function(req,res){
+  const newData = {
+      Fan: 1
+      };
+  database.ref("/").update(newData);
+  res.sendStatus(200);
+})
 
 server.listen(port, () => {
     console.log('listening on *:3000');

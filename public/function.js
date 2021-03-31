@@ -1,11 +1,14 @@
 const socket = io();
-const toggle = document.getElementById('toggle');
+const toggle1 = document.getElementById('toggle1');
 const img1 = document.getElementById('img1');
 const img2 = document.getElementById('img2');
+const img = document.getElementById('img');
 const pm25c = document.getElementById('pm25c');
 const pm10c = document.getElementById('pm10c');
 const time = document.getElementById('time');
 const speak = document.getElementById('speak');
+const toggle2 = document.getElementById('toggle2');
+const toggle3 = document.getElementById('toggle3');
 
 speak.addEventListener('click',e=>{
     speak.innerHTML="Listening";
@@ -26,35 +29,35 @@ speak.addEventListener('click',e=>{
 });
 
 
-toggle.addEventListener('click',e => {
+toggle1.addEventListener('click',e => {
 
     e.preventDefault();
-    change(toggle.value);
+    change(toggle1.value);
 });
 
 function change(value){
     if(value == '1'){
         axios({
             method: 'post',
-            url: '/update',
+            url: '/update1n',
             data: {
                 ledStatus : 0
             }
         });
-        toggle.value = "0";
-        toggle.innerHTML = "LED-OFF";
+        toggle1.value = "0";
+        toggle1.innerHTML = "LED-OFF";
         img1.src = "off.png";
     }
     else{
         axios({
             method: 'post',
-            url: '/update2',
+            url: '/update1f',
             data: {
                 ledStatus : 1
             }
         });
-        toggle.value = "1";
-        toggle.innerHTML = "LED-On";
+        toggle1.value = "1";
+        toggle1.innerHTML = "LED-ON";
         img1.src = "on.png";
     }
 }
@@ -128,24 +131,37 @@ window.onload = function() {
             pm10c.innerHTML = "Hazardous";
 
     }
-    function status(status){
+    function status(status,toggle,imgs){
         if(status == '1'){
             toggle.value = "1";
-            toggle.innerHTML = "LED-On";
-            img1.src = "on.png";
+            toggle.innerHTML = "LED-ON";
+            imgs.src = "on.png";
         }
         else{
             toggle.value = "0";
             toggle.innerHTML = "LED-OFF";
-            img1.src = "off.png";
+            imgs.src = "off.png";
+        }
+    }
+
+    function statusf(status,toggle){
+        if(status == '1'){
+            toggle.value = "1";
+            toggle.innerHTML = "FAN-ON";
+        }
+        else{
+            toggle.value = "0";
+            toggle.innerHTML = "FAN-OFF";
         }
     }
 
     socket.on('message', function(msg){
-        status(msg.Ledstatus)
+        status(msg.Led1,toggle1,img1);
+        status(msg.Led2,toggle2,img2);
+        statusf(msg.Fan,toggle3);
         if(xValue%3 == 0)
         {
-        img2.style.opacity = msg.table.ledb;    
+        img.style.opacity = msg.table.ledb;    
         addData(msg.table);
         }
         else{
@@ -155,7 +171,12 @@ window.onload = function() {
 
     socket.on("status",function(msg){
         change(msg);
-    })
+    });
+
+    socket.on("statusf",function(msg){
+        change3(msg);
+    });
+    
 
     function stime(){
         var today = new Date();
@@ -169,5 +190,70 @@ window.onload = function() {
     function checktime(i){
         if(i<10) return '0'+i;
         else return i;
+    }
+}
+
+
+toggle2.addEventListener('click',e => {
+
+    e.preventDefault();
+    change2(toggle2.value);
+});
+
+function change2(value){
+    if(value == '1'){
+        axios({
+            method: 'post',
+            url: '/update2n',
+            data: {
+                ledStatus : 0
+            }
+        });
+        toggle2.value = "0";
+        toggle2.innerHTML = "LED-OFF";
+        img2.src = "off.png";
+    }
+    else{
+        axios({
+            method: 'post',
+            url: '/update2f',
+            data: {
+                ledStatus : 1
+            }
+        });
+        toggle2.value = "1";
+        toggle2.innerHTML = "LED-ON";
+        img2.src = "on.png";
+    }
+}
+
+toggle3.addEventListener('click',e => {
+
+    e.preventDefault();
+    change3(toggle3.value);
+});
+
+function change3(value){
+    if(value == '1'){
+        axios({
+            method: 'post',
+            url: '/update3n',
+            data: {
+                ledStatus : 0
+            }
+        });
+        toggle3.value = "0";
+        toggle3.innerHTML = "FAN-OFF";
+    }
+    else{
+        axios({
+            method: 'post',
+            url: '/update3f',
+            data: {
+                ledStatus : 1
+            }
+        });
+        toggle3.value = "1";
+        toggle3.innerHTML = "FAN-ON";
     }
 }

@@ -30,10 +30,14 @@ def respond(voice_data):
         print(ctime()[0:16])
         engine.say(ctime()[0:16])
         engine.runAndWait()
-    if "on" in voice_data:
-        print("1")
-    if "off" in voice_data:
-        print("0")
+    if "LED on" in voice_data:
+        print("l1")
+    if "LED off" in voice_data:
+        print("l0")
+    if "fan on" in voice_data:
+        print("f1")
+    if "fan off" in voice_data:
+        print("f0")
     # if 'search' in voice_data:
     #     engine.say("What do you want to search for")
     #     engine.runAndWait()

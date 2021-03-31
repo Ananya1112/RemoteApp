@@ -1,0 +1,32 @@
+
+int data=0;
+
+void setup() { 
+  Serial.begin(9600); //initialize serial COM at 9600 baudrate
+  pinMode(13, OUTPUT); 
+  pinMode(9, OUTPUT); 
+  pinMode(7, OUTPUT); 
+  digitalWrite (13, LOW);
+  digitalWrite (9, LOW);
+  digitalWrite (7, LOW);
+  Serial.println("Hi!, I am Arduino");
+}
+ 
+void loop() {
+if(Serial.available()>0){
+  data = Serial.read();
+  Serial.println(data);
+  if (data == '1')
+  digitalWrite (13, HIGH);
+  else if (data == '2')
+  digitalWrite (13, LOW);
+  else if (data == '3')
+  digitalWrite (9, HIGH);
+  else if (data == '4')
+  digitalWrite (9, LOW);
+  else if (data == '5')
+  digitalWrite (7, HIGH);
+  else if (data == '6')
+  digitalWrite (7, LOW);
+}
+}
